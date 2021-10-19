@@ -76,6 +76,11 @@ enum LED_STATES
 } led_state = SIDES;
 
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    if (host_keyboard_led_state().caps_lock) {
+        rgb_matrix_set_color_all(255, 0, 0);
+        return;
+    }
+
     switch (led_state) {
         case SIDES:
             for (uint8_t i = led_min; i < led_max; i++) {
