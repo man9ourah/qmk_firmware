@@ -50,7 +50,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [__FUN] = LAYOUT(
         _______, KC_WHOM, KC_MAIL, KC_F13,  KC_F14,  KC_F15,  KC_CALC, KC_PSCR, KC_F16,  KC_F17,   KC_MPRV, KC_MPLY, KC_MNXT, TG(__SEC),       _______,
-        _______, RGB_TOG, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
+        _______, RGB_TOG, KC_F19,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
         _______, _______, RGB_VAI, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,            _______,
         _______, _______, RGB_VAD, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,          _______,
         _______,          _______, RGB_HUI, _______, _______, _______, NK_TOGG, _______, _______, _______, _______,          _______, RGB_MOD, _______,
@@ -106,9 +106,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     if(keycode == RGB_TOG){
         if (record->event.pressed) {
             // we need to toggle the states
-            led_state = (led_state+1) % (OFF +1);
+            led_state = (led_state+1) % (OFF+1);
         }
         return false;
+
+    }else if (keycode == KC_F19 && get_highest_layer(layer_state) == __FUN) {
+        // function key to default the rgb setting
+        rgb_matrix_mode(RGB_MATRIX_CYCLE_UP_DOWN);
+        rgb_matrix_set_speed(100);
+        led_state = SIDES;
 
     }else if (keycode == KC_F18 && get_highest_layer(layer_state) == __SEC) {
         reset_sec_state();
