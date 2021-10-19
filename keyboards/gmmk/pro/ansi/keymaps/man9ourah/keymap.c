@@ -68,6 +68,53 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 };
 // clang-format on
 
+enum LED_STATES
+{
+    ALL,   // All leds on
+    SIDES, // Only side leds on
+    OFF,   // Nothing is on
+} led_state = SIDES;
+
+void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    switch (led_state) {
+        case SIDES:
+            for (uint8_t i = led_min; i < led_max; i++) {
+                if(!HAS_FLAGS(g_led_config.flags[i], LED_FLAG_UNDERGLOW)){
+                    rgb_matrix_set_color(i, 0x00, 0x00, 0x00);
+                }
+            }
+            break;
+
+        case OFF:
+            rgb_matrix_set_color_all( 0, 0 , 0);
+            break;
+
+        case ALL:
+            // Do nothing..
+            break;
+    }
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    if(keycode == RGB_TOG){
+        if (record->event.pressed) {
+            switch (led_state) {
+                case ALL:
+                    led_state = SIDES;
+                    break;
+                case SIDES:
+                    led_state = OFF;
+                    break;
+                case OFF:
+                    led_state = ALL;
+                    break;
+            }
+        }
+        return false;
+    }
+    return true;
+}
+
 #ifdef ENCODER_ENABLE
 bool encoder_update_user(uint8_t index, bool clockwise) {
     if (clockwise) {
