@@ -77,7 +77,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     }
 
     // if entering passphrase, make all green.
-    if (get_highest_layer(layer_state) == 2) {
+    if (get_highest_layer(layer_state) == __SEC) {
         rgb_matrix_set_color_all(0, 255, 0);
         return;
     }
